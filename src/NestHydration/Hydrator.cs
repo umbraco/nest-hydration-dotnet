@@ -4,7 +4,7 @@ using System.Linq;
 namespace NestHydration
 {
     /// <summary>
-    /// 
+    /// The Hydrator - converts tabular data to nested objects/arrays based on a definition object
     /// </summary>
     public class Hydrator
     {
