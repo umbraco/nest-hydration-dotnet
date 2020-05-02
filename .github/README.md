@@ -1,4 +1,4 @@
-Nest Hydration for .NET
+# Nest Hydration for .NET
 
 A .Net implementation of the [Nest Hydration](https://github.com/CoursePark/NestHydrationJS) NodeJS library.
 
@@ -51,6 +51,10 @@ var table = [
     }
 ];
 ```
+
+Above are 7 rows each with the cells data for the columns `id`, `title`, `required`, `teacher_id`, `teacher_name`, `lesson_id`, `lesson_title`.
+
+Mapping from the property keys of the tabular data to nested objects is done in accordance to the definition object.
 
 Same data table as a C# object
 ```csharp
@@ -126,10 +130,6 @@ data.Add(new Dictionary<string, Maybe<object>>
     { "lesson_title", "Non Array Input" }
 });
 ```
-
-Above are 7 rows each with the cells data for the columns `id`, `title`, `required`, `teacher_id`, `teacher_name`, `lesson_id`, `lesson_title`.
-
-Mapping from the property keys of the tabular data to nested objects is done in accordance to the definition object.
 
 ### Definition
 
