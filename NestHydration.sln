@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NestHydration.Tests.Unit", "test\NestHydration.Tests.Unit\NestHydration.Tests.Unit.csproj", "{DAACFA3A-0452-44C1-8204-0C8979A9DCEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NestHydration", "src\NestHydration\NestHydration.csproj", "{0FC353A4-B11F-4AB1-8907-D28855CA827A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DAACFA3A-0452-44C1-8204-0C8979A9DCEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAACFA3A-0452-44C1-8204-0C8979A9DCEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAACFA3A-0452-44C1-8204-0C8979A9DCEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAACFA3A-0452-44C1-8204-0C8979A9DCEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FC353A4-B11F-4AB1-8907-D28855CA827A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FC353A4-B11F-4AB1-8907-D28855CA827A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FC353A4-B11F-4AB1-8907-D28855CA827A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FC353A4-B11F-4AB1-8907-D28855CA827A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
