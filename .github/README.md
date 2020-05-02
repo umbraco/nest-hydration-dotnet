@@ -1,0 +1,202 @@
+Nest Hydration for .NET
+
+A .Net implementation of the [Nest Hydration](https://github.com/CoursePark/NestHydrationJS) NodeJS library.
+
+## Introduction
+
+Converts tabular data into a nested object/array structure based on a definition object or specially named columns.
+
+## Tabular Data With Definition Object
+
+Tabular data is considered to be an array of objects where each object represents a row and the properties of those objects are cell values with the keys representing the column names.
+
+### Tabular Data
+
+```javascript
+var table = [
+    {
+        id: '1', title: 'Tabular to Objects', required: '1',
+        teacher_id: '1', teacher_name: 'David',
+        lesson_id: '1', lesson_title: 'Definitions'
+    },
+    {
+        id: '1', title: 'Tabular to Objects', required: '1',
+        teacher_id: '1', teacher_name: 'David',
+        lesson_id: '2', lesson_title: 'Table Data'
+    },
+    {
+        id: '1', title: 'Tabular to Objects', required: '1',
+        teacher_id: '1', teacher_name: 'David',
+        lesson_id: '3', lesson_title: 'Objects'
+    },
+    {
+        id: '2', title: 'Column Names Define Structure', required: '0',
+        teacher_id: '2', teacher_name: 'Chris',
+        lesson_id: '4', lesson_title: 'Column Names'
+    },
+    {
+        id: '2', title: 'Column Names Define Structure', required: '0',
+        teacher_id: '2', teacher_name: 'Chris',
+        lesson_id: '2', lesson_title: 'Table Data'
+    },
+    {
+        id: '2', title: 'Column Names Define Structure', required: '0',
+        teacher_id: '2', teacher_name: 'Chris',
+        lesson_id: '3', lesson_title: 'Objects'
+    },
+    {
+        id: '3', title: 'Object On Bottom', required: '0',
+        teacher_id: '1', teacher_name: 'David',
+        lesson_id: '5', lesson_title: 'Non Array Input'
+    }
+];
+```
+
+Same data table as a C# object
+```csharp
+var data = new List<Dictionary<string, Maybe<object>>>();
+data.Add(new Dictionary<string, Maybe<object>>
+{
+    { "id", 1 },
+    { "title", "Tabular to Objects" },
+    { "required", true },
+    { "teacher_id", 1 },
+    { "teacher_name", "David" },
+    { "lesson_id", 1 },
+    { "lesson_title", "Definitions" }
+});
+data.Add(new Dictionary<string, Maybe<object>>
+{
+    { "id", 1 },
+    { "title", "Tabular to Objects" },
+    { "required", true },
+    { "teacher_id", 1 },
+    { "teacher_name", "David" },
+    { "lesson_id", 2 },
+    { "lesson_title", "Table Data" }
+});
+data.Add(new Dictionary<string, Maybe<object>>
+{
+    { "id", 1 },
+    { "title", "Tabular to Objects" },
+    { "required", true },
+    { "teacher_id", 1 },
+    { "teacher_name", "David" },
+    { "lesson_id", 3 },
+    { "lesson_title", "Objects" }
+});
+data.Add(new Dictionary<string, Maybe<object>>
+{
+    { "id", 2 },
+    { "title", "Column Names Define Structure" },
+    { "required", false },
+    { "teacher_id", 2 },
+    { "teacher_name", "Chris" },
+    { "lesson_id", 4 },
+    { "lesson_title", "Column Names" }
+});
+data.Add(new Dictionary<string, Maybe<object>>
+{
+    { "id", 2 },
+    { "title", "Column Names Define Structure" },
+    { "required", false },
+    { "teacher_id", 2 },
+    { "teacher_name", "Chris" },
+    { "lesson_id", 2 },
+    { "lesson_title", "Table Data" }
+});
+data.Add(new Dictionary<string, Maybe<object>>
+{
+    { "id", 2 },
+    { "title", "Column Names Define Structure" },
+    { "required", false },
+    { "teacher_id", 2 },
+    { "teacher_name", "Chris" },
+    { "lesson_id", 3 },
+    { "lesson_title", "Objects" }
+});
+data.Add(new Dictionary<string, Maybe<object>>
+{
+    { "id", 3 },
+    { "title", "Object On Bottom" },
+    { "required", true },
+    { "teacher_id", 1 },
+    { "teacher_name", "David" },
+    { "lesson_id", 5 },
+    { "lesson_title", "Non Array Input" }
+});
+```
+
+Above are 7 rows each with the cells data for the columns `id`, `title`, `required`, `teacher_id`, `teacher_name`, `lesson_id`, `lesson_title`.
+
+Mapping from the property keys of the tabular data to nested objects is done in accordance to the definition object.
+
+### Definition
+
+The definition as a strongly typed object.
+```csharp
+var definition = new Definition();
+definition.Properties.Add(new Property("id", "id", "NUMBER", true));
+definition.Properties.Add(new Property("title"));
+definition.Properties.Add(new Property("required", "required", "BOOLEAN"));
+definition.Properties.Add(new PropertyObject("teacher",
+    new Properties {
+        new Property("id", "teacher_id", "NUMBER", true),
+        new Property("name", "teacher_name") }
+));
+definition.Properties.Add(new PropertyArray("lesson",
+    new Properties {
+        new Property("id", "lesson_id", "NUMBER", true),
+        new Property("title", "lesson_title")
+    }
+));
+```
+
+### Transformation
+
+Use the following two lines of code to transform the tabular data into a nested object/array based on the definition.
+```csharp
+var hydrator = new Hydrator(data, definition);
+var result = hydrator.Execute();
+```
+
+### Result
+
+The result as it would look if defined as a C# object
+```csharp
+var expected = new List<Dictionary<string, Maybe<object>>>();
+expected.Add(new Dictionary<string, Maybe<object>>
+{
+    { "id", 1 },
+    { "title", "Tabular to Objects" },
+    { "required", true },
+    { "teacher", new Dictionary<string, Maybe<object>>{ {"id", 1}, {"name", "David"} } },
+    { "lesson", new List<Dictionary<string, Maybe<object>>> {
+        new Dictionary<string, Maybe<object>> { { "id", 1 }, {"title", "Definitions" } },
+        new Dictionary<string, Maybe<object>> { { "id", 2 }, {"title", "Table Data"} },
+        new Dictionary<string, Maybe<object>> { { "id", 3 }, {"title", "Objects"} }
+    } }
+});
+expected.Add(new Dictionary<string, Maybe<object>>
+{
+    { "id", 2 },
+    { "title", "Column Names Define Structure" },
+    { "required", false },
+    { "teacher", new Dictionary<string, Maybe<object>>{ {"id", 2}, {"name", "Chris"} } },
+    { "lesson", new List<Dictionary<string, Maybe<object>>> {
+        new Dictionary<string, Maybe<object>> { { "id", 4 }, {"title", "Column Names"} },
+        new Dictionary<string, Maybe<object>> { { "id", 2 }, {"title", "Table Data"} },
+        new Dictionary<string, Maybe<object>> { { "id", 3 }, {"title", "Objects"} }
+    } }
+});
+expected.Add(new Dictionary<string, Maybe<object>>
+{
+    { "id", 3 },
+    { "title", "Object On Bottom" },
+    { "required", true },
+    { "teacher", new Dictionary<string, Maybe<object>>{ {"id", 1}, {"name", "David"} } },
+    { "lesson", new List<Dictionary<string, Maybe<object>>> {
+        new Dictionary<string, Maybe<object>> { { "id", 5 }, {"title", "Non Array Input" } }
+    } }
+});
+```
