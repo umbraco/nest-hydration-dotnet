@@ -8,7 +8,9 @@
         <Copyright>2020</Copyright>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <language>en-US</language>
-        <tags>graphql join-monster object hydration</tags>
+        <tags>graphql,join-monster,nested objects,hydration</tags>
+        <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+        <PackageProjectUrl>https://github.com/umbraco/nest-hydration-dotnet</PackageProjectUrl>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/umbraco/nest-hydration-dotnet</RepositoryUrl>
     </PropertyGroup>
@@ -20,5 +22,9 @@
         <Nullable>enable</Nullable>
         <DocumentationFile>bin\$(Configuration)\NestHydration.xml</DocumentationFile>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../../LICENSE.md" Pack="true" Visible="false" PackagePath="$(PackageLicenseFile)" />
+    </ItemGroup>
 
 </Project>
