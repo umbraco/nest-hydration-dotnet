@@ -5,21 +5,15 @@
     /// </summary>
     public class Property : IProperty
     {
-        public Property(string name) : this(name, name, "STRING")
+        public Property(string name) : this(name, name)
         {
             
         }
 
-        public Property(string name, string column) : this(name, column, "STRING")
-        {
-
-        }
-
-        public Property(string name, string column, string type, bool isId = false)
+        public Property(string name, string column, bool isId = false)
         {
             Name = name;
             Column = column;
-            Type = type;
             IsId = isId;
         }
 
@@ -32,12 +26,7 @@
         /// Name of the Column
         /// </summary>
         public string Column { get; set; }
-
-        /// <summary>
-        /// Type of the Property
-        /// </summary>
-        public string Type { get; set; }
-
+        
         /// <summary>
         /// Boolean which highlights that the current Property
         /// is an Id - the Id is used to identify one-to-many

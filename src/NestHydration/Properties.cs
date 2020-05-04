@@ -7,6 +7,9 @@ namespace NestHydration
     /// </summary>
     public class Properties : List<IProperty>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public Properties()
         {
         }
