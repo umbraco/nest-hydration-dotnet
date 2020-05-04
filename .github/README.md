@@ -58,8 +58,8 @@ Mapping from the property keys of the tabular data to nested objects is done in 
 
 Same data table as a C# object
 ```csharp
-var data = new List<Dictionary<string, Maybe<object>>>();
-data.Add(new Dictionary<string, Maybe<object>>
+var data = new List<Dictionary<string, object>>();
+data.Add(new Dictionary<string, object>
 {
     { "id", 1 },
     { "title", "Tabular to Objects" },
@@ -69,7 +69,7 @@ data.Add(new Dictionary<string, Maybe<object>>
     { "lesson_id", 1 },
     { "lesson_title", "Definitions" }
 });
-data.Add(new Dictionary<string, Maybe<object>>
+data.Add(new Dictionary<string, object>
 {
     { "id", 1 },
     { "title", "Tabular to Objects" },
@@ -79,7 +79,7 @@ data.Add(new Dictionary<string, Maybe<object>>
     { "lesson_id", 2 },
     { "lesson_title", "Table Data" }
 });
-data.Add(new Dictionary<string, Maybe<object>>
+data.Add(new Dictionary<string, object>
 {
     { "id", 1 },
     { "title", "Tabular to Objects" },
@@ -89,7 +89,7 @@ data.Add(new Dictionary<string, Maybe<object>>
     { "lesson_id", 3 },
     { "lesson_title", "Objects" }
 });
-data.Add(new Dictionary<string, Maybe<object>>
+data.Add(new Dictionary<string, object>
 {
     { "id", 2 },
     { "title", "Column Names Define Structure" },
@@ -99,7 +99,7 @@ data.Add(new Dictionary<string, Maybe<object>>
     { "lesson_id", 4 },
     { "lesson_title", "Column Names" }
 });
-data.Add(new Dictionary<string, Maybe<object>>
+data.Add(new Dictionary<string, object>
 {
     { "id", 2 },
     { "title", "Column Names Define Structure" },
@@ -109,7 +109,7 @@ data.Add(new Dictionary<string, Maybe<object>>
     { "lesson_id", 2 },
     { "lesson_title", "Table Data" }
 });
-data.Add(new Dictionary<string, Maybe<object>>
+data.Add(new Dictionary<string, object>
 {
     { "id", 2 },
     { "title", "Column Names Define Structure" },
@@ -119,7 +119,7 @@ data.Add(new Dictionary<string, Maybe<object>>
     { "lesson_id", 3 },
     { "lesson_title", "Objects" }
 });
-data.Add(new Dictionary<string, Maybe<object>>
+data.Add(new Dictionary<string, object>
 {
     { "id", 3 },
     { "title", "Object On Bottom" },
@@ -136,17 +136,17 @@ data.Add(new Dictionary<string, Maybe<object>>
 The definition as a strongly typed object.
 ```csharp
 var definition = new Definition();
-definition.Properties.Add(new Property("id", "id", "NUMBER", true));
+definition.Properties.Add(new Property("id", "id", true));
 definition.Properties.Add(new Property("title"));
-definition.Properties.Add(new Property("required", "required", "BOOLEAN"));
+definition.Properties.Add(new Property("required", "required"));
 definition.Properties.Add(new PropertyObject("teacher",
     new Properties {
-        new Property("id", "teacher_id", "NUMBER", true),
+        new Property("id", "teacher_id", true),
         new Property("name", "teacher_name") }
 ));
 definition.Properties.Add(new PropertyArray("lesson",
     new Properties {
-        new Property("id", "lesson_id", "NUMBER", true),
+        new Property("id", "lesson_id", true),
         new Property("title", "lesson_title")
     }
 ));
@@ -156,47 +156,47 @@ definition.Properties.Add(new PropertyArray("lesson",
 
 Use the following two lines of code to transform the tabular data into a nested object/array based on the definition.
 ```csharp
-var hydrator = new Hydrator(data, definition);
-var result = hydrator.Execute();
+var hydrator = new Hydrator();
+var result = hydrator.Nest(data, definition);
 ```
 
 ### Result
 
 The result as it would look if defined as a C# object
 ```csharp
-var expected = new List<Dictionary<string, Maybe<object>>>();
-expected.Add(new Dictionary<string, Maybe<object>>
+var expected = new List<Dictionary<string, object>>();
+expected.Add(new Dictionary<string, object>
 {
     { "id", 1 },
     { "title", "Tabular to Objects" },
     { "required", true },
-    { "teacher", new Dictionary<string, Maybe<object>>{ {"id", 1}, {"name", "David"} } },
-    { "lesson", new List<Dictionary<string, Maybe<object>>> {
-        new Dictionary<string, Maybe<object>> { { "id", 1 }, {"title", "Definitions" } },
-        new Dictionary<string, Maybe<object>> { { "id", 2 }, {"title", "Table Data"} },
-        new Dictionary<string, Maybe<object>> { { "id", 3 }, {"title", "Objects"} }
+    { "teacher", new Dictionary<string, object>{ {"id", 1}, {"name", "David"} } },
+    { "lesson", new List<Dictionary<string, object>> {
+        new Dictionary<string, object> { { "id", 1 }, {"title", "Definitions" } },
+        new Dictionary<string, object> { { "id", 2 }, {"title", "Table Data"} },
+        new Dictionary<string, object> { { "id", 3 }, {"title", "Objects"} }
     } }
 });
-expected.Add(new Dictionary<string, Maybe<object>>
+expected.Add(new Dictionary<string, object>
 {
     { "id", 2 },
     { "title", "Column Names Define Structure" },
     { "required", false },
-    { "teacher", new Dictionary<string, Maybe<object>>{ {"id", 2}, {"name", "Chris"} } },
-    { "lesson", new List<Dictionary<string, Maybe<object>>> {
-        new Dictionary<string, Maybe<object>> { { "id", 4 }, {"title", "Column Names"} },
-        new Dictionary<string, Maybe<object>> { { "id", 2 }, {"title", "Table Data"} },
-        new Dictionary<string, Maybe<object>> { { "id", 3 }, {"title", "Objects"} }
+    { "teacher", new Dictionary<string, object>{ {"id", 2}, {"name", "Chris"} } },
+    { "lesson", new List<Dictionary<string, object>> {
+        new Dictionary<string, object> { { "id", 4 }, {"title", "Column Names"} },
+        new Dictionary<string, object> { { "id", 2 }, {"title", "Table Data"} },
+        new Dictionary<string, object> { { "id", 3 }, {"title", "Objects"} }
     } }
 });
-expected.Add(new Dictionary<string, Maybe<object>>
+expected.Add(new Dictionary<string, object>
 {
     { "id", 3 },
     { "title", "Object On Bottom" },
     { "required", true },
-    { "teacher", new Dictionary<string, Maybe<object>>{ {"id", 1}, {"name", "David"} } },
-    { "lesson", new List<Dictionary<string, Maybe<object>>> {
-        new Dictionary<string, Maybe<object>> { { "id", 5 }, {"title", "Non Array Input" } }
+    { "teacher", new Dictionary<string, object>{ {"id", 1}, {"name", "David"} } },
+    { "lesson", new List<Dictionary<string, object>> {
+        new Dictionary<string, object> { { "id", 5 }, {"title", "Non Array Input" } }
     } }
 });
 ```
