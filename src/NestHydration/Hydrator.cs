@@ -8,25 +8,18 @@ namespace NestHydration
     /// </summary>
     public class Hydrator
     {
-        private readonly Definition _definition;
-        private readonly List<Dictionary<string, Maybe<object>>> _dataSet;
+        public Hydrator() { }
 
-        public Hydrator(List<Dictionary<string, Maybe<object>>> dataSet, Definition definition)
+        public List<Dictionary<string, object>> Nest(List<Dictionary<string, object>> dataSet, Definition definition)
         {
-            _dataSet = dataSet;
-            _definition = definition;
-        }
+            var result = new List<Dictionary<string, object>>();
+            var primaryIdColumn = definition.Properties.First(x => x is Property property && property.IsId) as Property;
 
-        public List<Dictionary<string, Maybe<object>>> Execute()
-        {
-            var result = new List<Dictionary<string, Maybe<object>>>();
-            var primaryIdColumn = _definition.Properties.First(x => x is Property property && property.IsId) as Property;
-
-            foreach (var row in _dataSet)
+            foreach (var row in dataSet)
             {
                 var mappedEntry = BuildEntry(primaryIdColumn, row, result);
 
-                foreach (var property in _definition.Properties)
+                foreach (var property in definition.Properties)
                 {
                     if (property is Property pId && pId.IsId) continue;
                     if (property is Property p) Extract(p, row, mappedEntry);
@@ -38,14 +31,14 @@ namespace NestHydration
             return result;
         }
 
-        private void Extract(Property property, Dictionary<string, Maybe<object>> row, Dictionary<string, Maybe<object>> mappedEntry)
+        private void Extract(Property property, Dictionary<string, object> row, Dictionary<string, object> mappedEntry)
         {
             mappedEntry[property.Name] = row[property.Column];
         }
 
-        private void Extract(PropertyObject propertyObject, Dictionary<string, Maybe<object>> row, Dictionary<string, Maybe<object>> mappedEntry)
+        private void Extract(PropertyObject propertyObject, Dictionary<string, object> row, Dictionary<string, object> mappedEntry)
         {
-            var newEntry = new Dictionary<string, Maybe<object>>();
+            var newEntry = new Dictionary<string, object>();
             foreach (var property in propertyObject.Properties)
             {
                 if (property is Property p) Extract(p, row, newEntry);
@@ -55,13 +48,13 @@ namespace NestHydration
             mappedEntry[propertyObject.Name] = newEntry;
         }
 
-        private void Extract(PropertyArray propertyArray, Dictionary<string, Maybe<object>> row, Dictionary<string, Maybe<object>> mappedEntry)
+        private void Extract(PropertyArray propertyArray, Dictionary<string, object> row, Dictionary<string, object> mappedEntry)
         {
             var primaryIdColumn = propertyArray.Properties.First(x => x is Property property && property.IsId) as Property;
             var entryExists = mappedEntry.ContainsKey(propertyArray.Name);
             var list = entryExists
-                ? mappedEntry[propertyArray.Name].Value as List<Dictionary<string, Maybe<object>>>
-                : new List<Dictionary<string, Maybe<object>>>();
+                ? mappedEntry[propertyArray.Name] as List<Dictionary<string, object>>
+                : new List<Dictionary<string, object>>();
 
             var mapped = BuildEntry(primaryIdColumn, row, list);
             foreach (var property in propertyArray.Properties)
@@ -76,15 +69,15 @@ namespace NestHydration
             mappedEntry[propertyArray.Name] = list;
         }
 
-        private Dictionary<string, Maybe<object>> BuildEntry(Property primaryIdColumn, Dictionary<string, Maybe<object>> row, List<Dictionary<string, Maybe<object>>> result)
+        private Dictionary<string, object> BuildEntry(Property primaryIdColumn, Dictionary<string, object> row, List<Dictionary<string, object>> result)
         {
             var value = row[primaryIdColumn.Column];
-            var existingEntry = result.FirstOrDefault(x => x.ContainsKey(primaryIdColumn.Name)
-                                                           && x.ContainsValue(value));
+            var existingEntry = result.FirstOrDefault(x =>
+                x != null && x.ContainsKey(primaryIdColumn.Name) && x.ContainsValue(value));
             if (existingEntry != null)
                 return existingEntry;
 
-            var newEntry = new Dictionary<string, Maybe<object>> {{primaryIdColumn.Name, value}};
+            var newEntry = new Dictionary<string, object> {{primaryIdColumn.Name, value}};
             result.Add(newEntry);
             return newEntry;
         }
