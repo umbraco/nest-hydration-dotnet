@@ -1,3 +1,7 @@
+[![Build Status](https://dev.azure.com/umbraco/Umbraco%20Headless/_apis/build/status/umbraco.nest-hydration-dotnet?branchName=master)](https://dev.azure.com/umbraco/Umbraco%20Headless/_build/latest?definitionId=262&branchName=master)
+[![NuGet version (NestHydration)](https://img.shields.io/nuget/v/NestHydration.svg?style=flat-square)](https://www.nuget.org/packages/NestHydration/)
+
+
 # Nest Hydration for .NET
 
 A .Net implementation of the [Nest Hydration](https://github.com/CoursePark/NestHydrationJS) NodeJS library.
