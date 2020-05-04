@@ -19,6 +19,7 @@ steps:
   displayName: GitVersion
   inputs:
     runtime: 'core'
+    
 - task: DotNetCoreCLI@2
   displayName: Restore
   inputs:
