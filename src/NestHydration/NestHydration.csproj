@@ -2,6 +2,19 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <authors>Umbraco HQ</authors>
+        <owners>Umbraco HQ</owners>
+        <Description>.NETStandard library for converting tabular data into a nested object/array structure based on a definition object</Description>
+        <Copyright>2020</Copyright>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <language>en-US</language>
+        <tags>graphql join-monster object hydration</tags>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/umbraco/nest-hydration-dotnet</RepositoryUrl>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
         <RootNamespace>NestHydration</RootNamespace>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
