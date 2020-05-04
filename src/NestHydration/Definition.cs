@@ -5,6 +5,9 @@
     /// </summary>
     public class Definition
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public Definition()
         {
             Properties = new Properties();
