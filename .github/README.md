@@ -4,7 +4,7 @@
 
 # Nest Hydration for .NET
 
-A .NET implementation of the [NNestHydrationJS](https://github.com/CoursePark/NestHydrationJS) library. Credit goes to the creators and maintainers of that project for the idea and sample data.
+A .NET implementation of the [NestHydrationJS](https://github.com/CoursePark/NestHydrationJS) library. Credit goes to the creators and maintainers of that project for the idea and sample data.
 
 ## Introduction
 
