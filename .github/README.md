@@ -6,6 +6,8 @@
 
 A .NET implementation of the [NestHydrationJS](https://github.com/CoursePark/NestHydrationJS) library. Credit goes to the creators and maintainers of that project for the idea and sample data.
 
+The current 0.1.0 release is an initial implementation, which we will continue to expand on. This means that, currently, types in the dataset remain the same, but we expect to add some kind of type conversation in the future. Performance and allocations is also an area we want to improve. Ideas and suggestions are always welcome.
+
 ## Introduction
 
 Converts tabular data into a nested object/array structure based on a definition object or specially named columns.
