@@ -4,7 +4,7 @@
 
 # Nest Hydration for .NET
 
-A .Net implementation of the [Nest Hydration](https://github.com/CoursePark/NestHydrationJS) NodeJS library.
+A .NET implementation of the [NNestHydrationJS](https://github.com/CoursePark/NestHydrationJS) library. Credit goes to the creators and maintainers of that project for the idea and sample data.
 
 ## Introduction
 
@@ -56,7 +56,7 @@ var table = [
 ];
 ```
 
-Above are 7 rows each with the cells data for the columns `id`, `title`, `required`, `teacher_id`, `teacher_name`, `lesson_id`, `lesson_title`.
+Above are 7 rows each with the cell data for the columns `id`, `title`, `required`, `teacher_id`, `teacher_name`, `lesson_id`, `lesson_title`.
 
 Mapping from the property keys of the tabular data to nested objects is done in accordance to the definition object.
 
