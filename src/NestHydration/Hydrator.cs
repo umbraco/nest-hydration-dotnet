@@ -41,6 +41,12 @@ namespace NestHydration
             var newEntry = new Dictionary<string, object>();
             foreach (var property in propertyObject.Properties)
             {
+                if (property is Property primaryIdColumn && primaryIdColumn.IsId && row[primaryIdColumn.Column] == null)
+                {
+                    mappedEntry[propertyObject.Name] = null;
+                    return;
+                }
+
                 if (property is Property p) Extract(p, row, newEntry);
                 if (property is PropertyObject po) Extract(po, row, newEntry);
                 if (property is PropertyArray pa) Extract(pa, row, newEntry);
