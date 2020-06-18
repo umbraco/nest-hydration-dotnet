@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using FluentAssertions;
+using System.Linq;
 using Xunit;
 
 namespace NestHydration.Tests.Unit
@@ -231,7 +231,7 @@ namespace NestHydration.Tests.Unit
         }
 
         [Fact]
-        public void Can_Build_Definition_People_From_Starterkit()
+        public void Can_Build_Definition_People_PropertyObject_From_Starterkit()
         {
             var definition = new Definition();
             definition.Properties.Add(new Property("id", "id", true));
@@ -293,6 +293,73 @@ namespace NestHydration.Tests.Unit
 
             var photo = result[3]["photo"] as Dictionary<string, object>;
             Assert.Null(photo["url"]);
+        }
+
+        [Fact]
+        public void Can_Build_Definition_People_PropertyArray_From_Starterkit()
+        {
+            var definition = new Definition();
+            definition.Properties.Add(new Property("id", "id", true));
+            definition.Properties.Add(new Property("contentTypeAlias"));
+            definition.Properties.Add(new Property("name"));
+            definition.Properties.Add(new PropertyArray("photo",
+                new Properties {
+                    new Property("id", "photo__id", true),
+                    new Property("mediaTypeAlias", "photo__mediaTypeAlias"),
+                    new Property("url", "photo__url")}
+            ));
+
+            var given = new List<Dictionary<string, object>>();
+            given.Add(new Dictionary<string, object>
+            {
+                { "id", 1 },
+                { "contentTypeAlias", "person" },
+                { "name", "Jan Skovgaard" },
+                { "photo__id", 1 },
+                { "photo__mediaTypeAlias", "image" },
+                { "photo__url", "/media/jan.png" }
+            });
+            given.Add(new Dictionary<string, object>
+            {
+                { "id", 2 },
+                { "contentTypeAlias", "person" },
+                { "name", "Matt Brailsford" },
+                { "photo__id", 2 },
+                { "photo__mediaTypeAlias", "image" },
+                { "photo__url", "/media/matt.png" }
+            });
+            given.Add(new Dictionary<string, object>
+            {
+                { "id", 3 },
+                { "contentTypeAlias", "person" },
+                { "name", "Lee Kelleher" },
+                { "photo__id", null },
+                { "photo__mediaTypeAlias", null },
+                { "photo__url", null }
+            });
+            given.Add(new Dictionary<string, object>
+            {
+                { "id", 4 },
+                { "contentTypeAlias", "person" },
+                { "name", "Jeavon Leopold" },
+                { "photo__id", 10 },
+                { "photo__mediaTypeAlias", "image" },
+                { "photo__url", null }
+            });
+
+            var hydrator = new Hydrator();
+            var result = hydrator.Nest(given, definition);
+
+            Assert.NotEmpty(result);
+
+            Assert.Equal("Jan Skovgaard", result[0]["name"]);
+            Assert.NotNull(result[0]["photo"]);
+            Assert.Null(result[2]["photo"]);
+
+            var photo = result[3]["photo"] as List<Dictionary<string, object>>;
+            Assert.NotNull(photo);
+            Assert.Single(photo);
+            Assert.Null(photo.First()["url"]);
         }
     }
 }
