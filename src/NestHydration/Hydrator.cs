@@ -18,6 +18,7 @@ namespace NestHydration
             foreach (var row in dataSet)
             {
                 var mappedEntry = BuildEntry(primaryIdColumn, row, result);
+                if(mappedEntry == null) continue;
 
                 foreach (var property in definition.Properties)
                 {
@@ -63,6 +64,12 @@ namespace NestHydration
                 : new List<Dictionary<string, object>>();
 
             var mapped = BuildEntry(primaryIdColumn, row, list);
+            if (mapped == null)
+            {
+                mappedEntry[propertyArray.Name] = null;
+                return;
+            }
+            
             foreach (var property in propertyArray.Properties)
             {
                 if (property is Property pId && pId.IsId) continue;
@@ -78,6 +85,9 @@ namespace NestHydration
         private Dictionary<string, object> BuildEntry(Property primaryIdColumn, Dictionary<string, object> row, List<Dictionary<string, object>> result)
         {
             var value = row[primaryIdColumn.Column];
+            if (value == null)
+                return null;
+
             var existingEntry = result.FirstOrDefault(x =>
                 x != null && x.ContainsKey(primaryIdColumn.Name) && x.ContainsValue(value));
             if (existingEntry != null)
