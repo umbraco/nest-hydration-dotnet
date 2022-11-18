@@ -134,7 +134,7 @@ namespace NestHydration.Tests.Unit
             });
 
             var hydrator = new Hydrator();
-            var result = hydrator.Nest(given, definition);
+            var result = hydrator.Nest(given, definition).ToList();
 
             Assert.NotEmpty(result);
 
@@ -218,7 +218,7 @@ namespace NestHydration.Tests.Unit
             });
 
             var hydrator = new Hydrator();
-            var result = hydrator.Nest(given, definition);
+            var result = hydrator.Nest(given, definition).ToList();
 
             Assert.NotEmpty(result);
 
@@ -283,7 +283,7 @@ namespace NestHydration.Tests.Unit
             });
 
             var hydrator = new Hydrator();
-            var result = hydrator.Nest(given, definition);
+            var result = hydrator.Nest(given, definition).ToList();
 
             Assert.NotEmpty(result);
 
@@ -348,7 +348,7 @@ namespace NestHydration.Tests.Unit
             });
 
             var hydrator = new Hydrator();
-            var result = hydrator.Nest(given, definition);
+            var result = hydrator.Nest(given, definition).ToList();
 
             Assert.NotEmpty(result);
 
