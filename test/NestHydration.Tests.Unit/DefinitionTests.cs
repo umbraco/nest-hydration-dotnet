@@ -134,7 +134,7 @@ namespace NestHydration.Tests.Unit
             });
 
             var hydrator = new Hydrator();
-            var result = hydrator.Nest(given, definition);
+            var result = hydrator.Nest(given, definition).ToList();
 
             Assert.NotEmpty(result);
 
@@ -218,7 +218,7 @@ namespace NestHydration.Tests.Unit
             });
 
             var hydrator = new Hydrator();
-            var result = hydrator.Nest(given, definition);
+            var result = hydrator.Nest(given, definition).ToList();
 
             Assert.NotEmpty(result);
 
@@ -283,7 +283,7 @@ namespace NestHydration.Tests.Unit
             });
 
             var hydrator = new Hydrator();
-            var result = hydrator.Nest(given, definition);
+            var result = hydrator.Nest(given, definition).ToList();
 
             Assert.NotEmpty(result);
 
@@ -291,7 +291,7 @@ namespace NestHydration.Tests.Unit
             Assert.NotNull(result[0]["photo"]);
             Assert.Null(result[2]["photo"]);
 
-            var photo = result[3]["photo"] as Dictionary<string, object>;
+            var photo = result[3]["photo"] as IDictionary<string, object>;
             Assert.Null(photo["url"]);
         }
 
@@ -348,7 +348,7 @@ namespace NestHydration.Tests.Unit
             });
 
             var hydrator = new Hydrator();
-            var result = hydrator.Nest(given, definition);
+            var result = hydrator.Nest(given, definition).ToList();
 
             Assert.NotEmpty(result);
 
@@ -356,7 +356,7 @@ namespace NestHydration.Tests.Unit
             Assert.NotNull(result[0]["photo"]);
             Assert.Null(result[2]["photo"]);
 
-            var photo = result[3]["photo"] as List<Dictionary<string, object>>;
+            var photo = result[3]["photo"] as List<IDictionary<string, object>>;
             Assert.NotNull(photo);
             Assert.Single(photo);
             Assert.Null(photo.First()["url"]);

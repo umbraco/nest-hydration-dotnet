@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace NestHydration
@@ -10,10 +12,11 @@ namespace NestHydration
     {
         public Hydrator() { }
 
-        public List<Dictionary<string, object>> Nest(List<Dictionary<string, object>> dataSet, Definition definition)
+        public IEnumerable<IDictionary<string, object?>> Nest(IEnumerable<IDictionary<string, object?>> dataSet, Definition definition)
         {
-            var result = new List<Dictionary<string, object>>();
+            var result = new List<IDictionary<string, object?>>();
             var primaryIdColumn = definition.Properties.First(x => x is Property property && property.IsId) as Property;
+            if (primaryIdColumn == null) throw new InvalidOperationException("Definition did not contain a Property with IsId=true.");
 
             foreach (var row in dataSet)
             {
@@ -32,14 +35,14 @@ namespace NestHydration
             return result;
         }
 
-        private void Extract(Property property, Dictionary<string, object> row, Dictionary<string, object> mappedEntry)
+        private void Extract(Property property, IDictionary<string, object?> row, IDictionary<string, object?> mappedEntry)
         {
             mappedEntry[property.Name] = row[property.Column];
         }
 
-        private void Extract(PropertyObject propertyObject, Dictionary<string, object> row, Dictionary<string, object> mappedEntry)
+        private void Extract(PropertyObject propertyObject, IDictionary<string, object?> row, IDictionary<string, object?> mappedEntry)
         {
-            var newEntry = new Dictionary<string, object>();
+            var newEntry = new ConcurrentDictionary<string, object?>();
             foreach (var property in propertyObject.Properties)
             {
                 if (property is Property primaryIdColumn && primaryIdColumn.IsId && row[primaryIdColumn.Column] == null)
@@ -55,13 +58,13 @@ namespace NestHydration
             mappedEntry[propertyObject.Name] = newEntry;
         }
 
-        private void Extract(PropertyArray propertyArray, Dictionary<string, object> row, Dictionary<string, object> mappedEntry)
+        private void Extract(PropertyArray propertyArray, IDictionary<string, object?> row, IDictionary<string, object?> mappedEntry)
         {
             var primaryIdColumn = propertyArray.Properties.First(x => x is Property property && property.IsId) as Property;
-            var entryExists = mappedEntry.ContainsKey(propertyArray.Name);
-            var list = entryExists
-                ? mappedEntry[propertyArray.Name] as List<Dictionary<string, object>>
-                : new List<Dictionary<string, object>>();
+            if (primaryIdColumn == null) throw new InvalidOperationException("Definition did not contain a Property with IsId=true.");
+
+            if (mappedEntry.TryGetValue(propertyArray.Name, out var exising) is false || exising is not List<IDictionary<string, object?>> list)
+                list = new List<IDictionary<string, object?>>();
 
             var mapped = BuildEntry(primaryIdColumn, row, list);
             if (mapped == null)
@@ -69,7 +72,7 @@ namespace NestHydration
                 mappedEntry[propertyArray.Name] = null;
                 return;
             }
-            
+
             foreach (var property in propertyArray.Properties)
             {
                 if (property is Property pId && pId.IsId) continue;
@@ -78,22 +81,23 @@ namespace NestHydration
                 if (property is PropertyArray pa) Extract(pa, row, mapped);
             }
 
-            if(entryExists) return;
+            if(exising is not null) return;
             mappedEntry[propertyArray.Name] = list;
         }
 
-        private Dictionary<string, object> BuildEntry(Property primaryIdColumn, Dictionary<string, object> row, List<Dictionary<string, object>> result)
+        private IDictionary<string, object?>? BuildEntry(Property primaryIdColumn, IDictionary<string, object?> row, List<IDictionary<string, object?>> result)
         {
             var value = row[primaryIdColumn.Column];
             if (value == null)
                 return null;
 
             var existingEntry = result.FirstOrDefault(x =>
-                x != null && x.ContainsKey(primaryIdColumn.Name) && x.ContainsValue(value));
+                x != null && x.ContainsKey(primaryIdColumn.Name) && x.Values.Contains(value));
             if (existingEntry != null)
                 return existingEntry;
 
-            var newEntry = new Dictionary<string, object> {{primaryIdColumn.Name, value}};
+            var newEntry = new ConcurrentDictionary<string, object?>();
+            newEntry.TryAdd(primaryIdColumn.Name, value);
             result.Add(newEntry);
             return newEntry;
         }
